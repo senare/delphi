@@ -6,13 +6,14 @@ from game import Action
 
 
 def get_actions(state):
-    print('### ======================================================= ###')
     me = state.unit
+    foes = [f for f in state.foes if f.health > 0]
+    friends = [f for f in state.units if f.health > 0]
 
     trg = {
         (me.x, me.y + 1): [Action('attack', 'down'), Action('move', 'up')],
-        (me.x, me.y - 1): [Action('attack', 'up'), Action('move', 'down')],
-        (me.x - 1, me.y): [Action('attack', 'left'), Action('move', 'right')],
+        (me.x, me.y - 1): [Action('attack', 'up'), Action('move', 'left')],
+        (me.x - 1, me.y): [Action('attack', 'left'), Action('move', 'up')],
         (me.x + 1, me.y): [Action('attack', 'right'), Action('move', 'left')],
 
         (me.x, me.y + 2): [Action('move', 'down'), Action('attack', 'down')],
@@ -26,60 +27,52 @@ def get_actions(state):
         (me.x - 1, me.y + 1): [Action('move', 'left'), Action('attack', 'down')]
     }
 
-    me_pos = (me.x, me.y)
-    print('My position %s' % str(me_pos))
+    for f in foes:
+        if (f.x, f.y) in trg:
+            return trg.get((f.x, f.y))
 
-    foes = [i for i in state.foes]
-    foes_pos = list(map(lambda f: (f.x, f.y), foes))
-    print('Foes position %s' % str(foes_pos))
+    for f in foes:
+        if f.x == me.x:
+            return [Action('move', 'left')]
 
-    friends = [i for i in state.units]
-    friends_pos = list(map(lambda f: (f.x, f.y), friends))
-    print('Friends position %s' % str(friends_pos))
+    for f in foes:
+        if f.y == me.y:
+            return [Action('move', 'up')]
 
-    for f in foes_pos:
-        if f in trg:
-            return trg.get(f)
+    for f in friends:
+        if f.x == me.x:
+            return [Action('move', 'up')]
 
-    switcher = {
-        0: [Action('move', 'left')],
-        1: [Action('move', 'right')],
-        2: [Action('move', 'down')],
-        3: [Action('move', 'up')]
+    for f in friends:
+        if f.y == me.y:
+            return [Action('move', 'left')]
+
+    move = {
+        1: [Action('move', 'up')],
+        2: [Action('move', 'left')]
     }
 
-    me_x = state.unit.x
-    me_y = state.unit.y
+    pos = {
+        1: (me.x, me.y + 1),
+        2: (me.x - 1, me.y)
+    }
 
-    foes_x = list(map(lambda f: f.x, foes))
-    foes_y = list(map(lambda f: f.y, foes))
+    default = randint(1, 2)
+    default_pos = pos.get(default)
 
-    friends_x = list(map(lambda f: f.x, friends))
-    friends_y = list(map(lambda f: f.y, friends))
+    if state.empty_map[default_pos[0]][default_pos[1]]:
+        return move.get(default)
 
-    for x in foes_x:
-        if x == me_x:
-            return switcher.get(randint(0, 1))
-
-    for y in foes_y:
-        if y == me_y:
-            return switcher.get(randint(2, 3))
-
-    for x in friends_x:
-        if x == me_x:
-            return switcher.get(randint(0, 1))
-
-    for y in friends_y:
-        if y == me_y:
-            return switcher.get(randint(2, 3))
-
-    return switcher.get(randint(0, 3))
+    if default == 1:
+        return move.get(2)
+    else:
+        return move.get(1)
 
 
 def get_player_info():
     return {
-        "id": "Purple",
-        "name": "Purple"
+        "id": "Delphi",
+        "name": "Delphi"
     }
 
 
