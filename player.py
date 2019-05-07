@@ -18,7 +18,12 @@ def get_actions(state):
         (me.x, me.y + 2): [Action('move', 'down'), Action('attack', 'down')],
         (me.x, me.y - 2): [Action('move', 'up'), Action('attack', 'up')],
         (me.x - 2, me.y): [Action('move', 'left'), Action('attack', 'left')],
-        (me.x + 2, me.y): [Action('move', 'right'), Action('attack', 'right')]
+        (me.x + 2, me.y): [Action('move', 'right'), Action('attack', 'right')],
+
+        (me.x + 1, me.y - 1): [Action('move', 'right'), Action('attack', 'up')],
+        (me.x - 1, me.y - 1): [Action('move', 'left'), Action('attack', 'up')],
+        (me.x + 1, me.y + 1): [Action('move', 'right'), Action('attack', 'down')],
+        (me.x - 1, me.y + 1): [Action('move', 'left'), Action('attack', 'down')]
     }
 
     me_pos = (me.x, me.y)
@@ -70,10 +75,11 @@ def get_actions(state):
 
     return switcher.get(randint(0, 3))
 
+
 def get_player_info():
     return {
-        "id": "Delphi",
-        "name": "Delphi"
+        "id": "Purple",
+        "name": "Purple"
     }
 
 
