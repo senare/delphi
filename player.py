@@ -32,12 +32,9 @@ def get_actions(state):
     friends_pos = list(map(lambda f: (f.x, f.y), friends))
     print('Friends position %s' % str(friends_pos))
 
-    print('Targets %s' % str(trg))
     for f in foes_pos:
         if f in trg:
-            move = trg.get(f)
-            print('Attack %s' % str(move))
-            return move
+            return trg.get(f)
 
     switcher = {
         0: [Action('move', 'left')],
@@ -46,47 +43,32 @@ def get_actions(state):
         3: [Action('move', 'up')]
     }
 
-    print('Unit %d , %d' % (state.unit.x, state.unit.y))
-    print('FOE %d , %d' % (state.foes[0].x, state.foes[0].y))
+    me_x = state.unit.x
+    me_y = state.unit.y
 
-    if (state.unit.x == state.units[0].x):
-        return switcher.get(randint(2, 3))
+    foes_x = list(map(lambda f: f.x, foes))
+    foes_y = list(map(lambda f: f.y, foes))
 
-    if (state.unit.y == state.units[0].y):
-        return switcher.get(randint(0, 1))
+    friends_x = list(map(lambda f: f.x, friends))
+    friends_y = list(map(lambda f: f.y, friends))
 
-    if (state.unit.x == state.units[1].x):
-        return switcher.get(randint(2, 3))
+    for x in foes_x:
+        if x == me_x:
+            return switcher.get(randint(0, 1))
 
-    if (state.unit.y == state.units[1].y):
-        return switcher.get(randint(0, 1))
+    for y in foes_y:
+        if y == me_y:
+            return switcher.get(randint(2, 3))
 
-    if (state.unit.x == state.units[2].x):
-        return switcher.get(randint(2, 3))
+    for x in friends_x:
+        if x == me_x:
+            return switcher.get(randint(0, 1))
 
-    if (state.unit.y == state.units[2].y):
-        return switcher.get(randint(0, 1))
-
-    if (state.unit.x == state.foes[0].x):
-        return switcher.get(randint(0, 1))
-
-    if (state.unit.y == state.foes[0].y):
-        return switcher.get(randint(2, 3))
-
-    if (state.unit.x == state.foes[1].x):
-        return switcher.get(randint(0, 1))
-
-    if (state.unit.y == state.foes[1].y):
-        return switcher.get(randint(2, 3))
-
-    if (state.unit.x == state.foes[2].x):
-        return switcher.get(randint(0, 1))
-
-    if (state.unit.y == state.foes[2].y):
-        return switcher.get(randint(2, 3))
+    for y in friends_y:
+        if y == me_y:
+            return switcher.get(randint(2, 3))
 
     return switcher.get(randint(0, 3))
-
 
 def get_player_info():
     return {
